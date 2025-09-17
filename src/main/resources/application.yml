@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: false
+
+# 보안/토큰
+ADMIN_USERNAME: ${ADMIN_USERNAME}
+ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+JWT_SECRET: ${JWT_SECRET}
+JWT_EXP_MINUTES: ${JWT_EXP_MINUTES:120}  # 없으면 120분
+
+
+# React 개발 서버 CORS 허용 (필요시 수정)
+app:
+  cors:
+    allowed-origins: http://localhost:5173

@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://129.154.194.75:30022/dbport
+    username: admin
+    password: NewPassword123!
+  jpa:
+    hibernate:
+      ddl-auto: update   # 스키마 없어도 posts 테이블 자동 생성/갱신
+    open-in-view: false
+    show-sql: false
+
+ADMIN_USERNAME: admin
+ADMIN_PASSWORD: testpass
+
+JWT_SECRET: this_is_a_demo_secret_key_32bytes____
+JWT_EXP_MINUTES: 60
+
+# React 개발 서버 CORS 허용 (필요시 수정)
+app:
+  cors:
+    allowed-origins: http://localhost:5173
