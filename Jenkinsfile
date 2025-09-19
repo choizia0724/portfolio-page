@@ -23,14 +23,16 @@ pipeline {
       }
     }
 
-    // (선택) 이 단계는 “빨리 실패”용으로 유지. 완전 빼도 됨(도커 멀티스테이지가 빌드하니까)
     stage('Build (Maven)') {
       steps {
         sh '''
           set -euxo pipefail
-          chmod +x mvnw
-          ./mvnw -q -DskipTests dependency:go-offline
-          ./mvnw -q -DskipTests package
+          if [ -x mvnw ]; then
+            ./mvnw -q -DskipTests dependency:go-offline
+            ./mvnw -q -DskipTests package
+          else
+            echo "mvnw not found; skipping pre-build. Dockerfile will compile."
+          fi
         '''
       }
     }
