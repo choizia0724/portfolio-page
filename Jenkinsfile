@@ -6,8 +6,7 @@ pipeline {
     IMAGE_NAME    = 'portfolio-backend'
     IMAGE         = "${REGISTRY}/${IMAGE_NAME}"
     K8S_NAMESPACE = 'default'
-    KUBECONFIG    = credentials('kubeconfig_cred_id') // Secret file → 경로로 바인딩
-  }
+    }
 
   triggers { githubPush() }  // Webhook 연결되어 있으면 OK
 
