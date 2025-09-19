@@ -79,7 +79,7 @@ pipeline {
 
   post {
     success {
-      echo "✅ Deployed image: ${IMAGE}:$(readFile('.image_tag').trim())"
+      echo "✅ Deployed image: ${IMAGE}:${readFile('.image_tag').trim()}"
     }
     failure {
       echo "❌ Deploy failed. Rollback:"
