@@ -26,8 +26,8 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${ADMIN_USERNAME:admin}") private String adminUsername;
-    @Value("${ADMIN_PASSWORD:admin1234}") private String adminPassword;
+    @Value("${ADMIN_USERNAME}") private String adminUsername;
+    @Value("${ADMIN_PASSWORD}") private String adminPassword;
     @Value("${app.cors.allowed-origins:http://localhost:5173}")
     private String allowedOrigins;
 

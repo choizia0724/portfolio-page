@@ -3,20 +3,21 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://129.154.194.75:30022/dbport
-    username: admin
-    password: NewPassword123!
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update   # 스키마 없어도 posts 테이블 자동 생성/갱신
+      ddl-auto: update
     open-in-view: false
     show-sql: false
 
-ADMIN_USERNAME: admin
-ADMIN_PASSWORD: testpass
+# 보안/토큰
+ADMIN_USERNAME: ${ADMIN_USERNAME}
+ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+JWT_SECRET: ${JWT_SECRET}
+JWT_EXP_MINUTES: ${JWT_EXP_MINUTES:120}  # 없으면 120분
 
-JWT_SECRET: this_is_a_demo_secret_key_32bytes____
-JWT_EXP_MINUTES: 60
 
 # React 개발 서버 CORS 허용 (필요시 수정)
 app:

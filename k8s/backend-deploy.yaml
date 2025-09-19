@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfolio-backend
+  labels: { app: portfolio-backend }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: portfolio-backend }
+  template:
+    metadata:
+      labels: { app: portfolio-backend }
+    spec:
+      containers:
+        - name: app
+          image: docker.io/choizia/portfolio-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: portfolio-secret
+          readinessProbe:
+            httpGet: { path: /api/health, port: 8080 }
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /api/health, port: 8080 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: "100m", memory: "256Mi" }
+            limits:   { cpu: "500m", memory: "512Mi" }
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: portfolio-backend
+  labels: { app: portfolio-backend }
+spec:
+  type: NodePort
+  selector: { app: portfolio-backend }
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 33000

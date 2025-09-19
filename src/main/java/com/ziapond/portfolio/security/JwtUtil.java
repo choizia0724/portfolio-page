@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtUtil {
 
-    @Value("${JWT_SECRET:change_me_to_long_random_secret_value_32bytes_min}")
+    @Value("${JWT_SECRET}")
     private String secret;
 
     @Value("${JWT_EXP_MINUTES:120}")
