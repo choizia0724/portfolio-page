@@ -49,31 +49,42 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
-        http.csrf(csrf -> csrf.disable());
-        http.cors(Customizer.withDefaults());
-        http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.httpBasic(b -> b.disable()); // JWT 사용
-
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/health", "/api/dbping", "/api/posts/**").permitAll()
-                .requestMatchers("/api/posts/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-        );
+       http
+          .csrf(csrf -> csrf.disable())
+          .cors(Customizer.withDefaults())
+          .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          .httpBasic(b -> b.disable())
+          .authorizeHttpRequests(auth -> auth
+             
+              .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+        
+              .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+        
+              .requestMatchers(HttpMethod.GET, "/api/health", "/api/dbping", "/api/posts/**").permitAll()
+    
+              .requestMatchers(HttpMethod.POST,   "/api/posts/**").hasRole("ADMIN")
+              .requestMatchers(HttpMethod.PUT,    "/api/posts/**").hasRole("ADMIN")
+              .requestMatchers(HttpMethod.PATCH,  "/api/posts/**").hasRole("ADMIN")
+              .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasRole("ADMIN")
+    
+              .anyRequest().authenticated()
+          );
 
         http.addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of(allowedOrigins.split(",")));
-        cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        cfg.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        cfg.setAllowCredentials(false);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", cfg);
-        return source;
-    }
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration cfg = new CorsConfiguration();
+    cfg.setAllowedOrigins(List.of(allowedOrigins.split(","))); // "http://localhost:5174, http://NODE_IP:30010"
+    cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+    cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","Origin"));
+    cfg.setExposedHeaders(List.of("Location"));
+    cfg.setAllowCredentials(true); // ← 쿠키/Authorization 등 자격정보 허용
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", cfg);
+    return source;
+}
+
 }
