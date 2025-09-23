@@ -28,7 +28,7 @@ public class SecurityConfig {
 
     @Value("${ADMIN_USERNAME}") private String adminUsername;
     @Value("${ADMIN_PASSWORD}") private String adminPassword;
-    @Value("${app.cors.allowed-origins:http://localhost:5173}")
+    @Value("${app.cors.allowed-origins:http://localhost:5174}")
     private String allowedOrigins;
 
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
