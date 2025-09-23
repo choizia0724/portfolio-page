@@ -7,10 +7,21 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        '/proxy': {
-          target: 'http://129.154.194.75:30010/api',
+        '/api': {
+          target: env.VITE_API_BASE,
           changeOrigin: true,
           secure: false,
+          configure: (proxy, options) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              console.log('[proxyReq]', req.method, req.url, '=>', options.target)
+            })
+            proxy.on('proxyRes', (proxyRes, req) => {
+              console.log('[proxyRes]', proxyRes.statusCode, req.method, req.url)
+            })
+            proxy.on('error', (err, req) => {
+              console.error('[proxyError]', req.method, req.url, err?.message)
+            })
+          },
         },
       },
     },

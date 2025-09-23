@@ -1,10 +1,15 @@
 import axios from 'axios'
-const baseURL = '/proxy'
+const baseURL = '/api'
 export const api = axios.create({ baseURL })
 
+const shouldSkipAuth = (url='') => url.includes('/auth/login')
+
 api.interceptors.request.use(cfg => {
-    const t = localStorage.getItem('token')
-    if (t) cfg.headers.Authorization = `Bearer ${t}`
+    if (!shouldSkipAuth(cfg.url)) {
+        const t = localStorage.getItem('token')
+        if (t) cfg.headers.Authorization = `Bearer ${t}`
+    }
+    console.log(cfg)
     return cfg
 })
 
