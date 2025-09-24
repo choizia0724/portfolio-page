@@ -19,6 +19,9 @@ public class Post {
     @Column(columnDefinition = "TEXT")
     private String contentMd;  // 마크다운 원문
 
+    @Column(name = "readme_url")
+    private String readmeUrl;
+    
     private Boolean published = true;
 
     @Column(updatable = false)
