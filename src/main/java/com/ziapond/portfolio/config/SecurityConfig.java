@@ -77,7 +77,7 @@ public class SecurityConfig {
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration cfg = new CorsConfiguration();
-    cfg.setAllowedOrigins(List.of(allowedOrigins.split(","))); // "http://localhost:5174, http://NODE_IP:30010"
+    cfg.setAllowedOrigins(List.of(allowedOrigins.split(","),startWith("http://localhost")));
     cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
     cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","Origin"));
     cfg.setExposedHeaders(List.of("Location"));
