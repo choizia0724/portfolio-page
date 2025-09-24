@@ -1,15 +1,19 @@
 package com.ziapond.portfolio.post.web;
 
+import com.ziapond.portfolio.post.vo.PostRequest;
 import com.ziapond.portfolio.post.domain.Post;
 import com.ziapond.portfolio.post.repository.PostRepository;
+import com.ziapond.portfolio.post.service.GithubReadmeService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -17,8 +21,8 @@ import java.util.*;
 public class PostController {
 
     private final PostRepository repo;
-
-    private final JdbcTemplate jdbcTemplate; // <== 추가
+    private final JdbcTemplate jdbcTemplate;
+    private final GithubReadmeService githubReadmeService;
 
     @GetMapping("/dbping")
     public Map<String, String> dbping() {
@@ -39,22 +43,24 @@ public class PostController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // WRITE: ADMIN만 (SecurityConfig에서 권한 체크)
+    // create
     @PostMapping("/posts")
-    public Post create(@RequestBody @Valid PostRequest req) {
-        Post p = Post.builder()
-                .title(req.title())
-                .contentMd(req.contentMd())
-                .published(true)
-                .build();
+    public Post create(@RequestBody PostRequest req) {
+        Post p = new Post();
+        p.setTitle(req.getTitle());
+        p.setContentMd(req.getContentMd());
+        p.setReadmeUrl(req.getReadmeUrl());
+        p.setPublished(true);
         return repo.save(p);
     }
+
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> update(@PathVariable Long id, @RequestBody @Valid PostRequest req) {
         return repo.findById(id).map(p -> {
-            p.setTitle(req.title());
-            p.setContentMd(req.contentMd());
+            p.setTitle(req.getTitle());
+            p.setContentMd(req.getContentMd());
+            p.setReadmeUrl(req.getReadmeUrl());
             return ResponseEntity.ok(repo.save(p));
         }).orElse(ResponseEntity.notFound().build());
     }
@@ -68,5 +74,22 @@ public class PostController {
         return ResponseEntity.notFound().build();
     }
 
-    public record PostRequest(@NotBlank String title, @NotBlank String contentMd) {}
+
+    @GetMapping(value = "/github/readme", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String getReadme(@RequestParam String url) {
+        return githubReadmeService.fetchReadmeMd(url);
+    }
+
+    @GetMapping(value = "/posts/{id}/combined-md", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> combined(@PathVariable Long id) {
+        return repo.findById(id).map(p -> {
+            String head = Optional.ofNullable(p.getContentMd()).orElse("");
+            String tail = Optional.ofNullable(p.getReadmeUrl())
+                    .filter(u -> !u.isBlank())
+                    .map(githubReadmeService::fetchReadmeMd)
+                    .orElse("");
+            String divider = (head.isBlank() || tail.isBlank()) ? "\n" : "\n\n---\n\n";
+            return ResponseEntity.ok(head + divider + tail);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }
