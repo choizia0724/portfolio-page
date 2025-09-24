@@ -79,9 +79,9 @@ public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration cfg = new CorsConfiguration();
     
     List<String> origins = new ArrayList<>(Arrays.asList(allowedOrigins.split(",")));
-    origins.add("http://localhost"); 
+     origins.add("http://localhost:*");
 
-    cfg.setAllowedOrigins(origins);
+     cfg.setAllowedOriginPatterns(origins);
     cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
     cfg.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","Origin"));
     cfg.setExposedHeaders(List.of("Location"));
