@@ -2,11 +2,11 @@ import PostEditor from '../components/PostEditor'
 import { api} from './../assets/api'
 import { useNavigate, Link } from 'react-router-dom'
 
-export default function Admin() {
+export default function Write() {
     const nav = useNavigate()
 
-    const create = async ({ title, contentMd }) => {
-        await api.post('/posts', { title, contentMd })
+    const create = async ({ title, contentMd ,readmeUrl}) => {
+        await api.post('/posts', { title, contentMd,readmeUrl })
         alert('등록 완료')
         nav('/', { replace: true })
     }

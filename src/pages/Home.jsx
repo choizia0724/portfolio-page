@@ -12,6 +12,10 @@ export default function Home() {
     return (
         <div className="space-y-4">
             <h1 className="text-2xl font-bold">포트폴리오</h1>
+            <Link to={'/post/all'} className="block bg-white border rounded-xl p-4 hover:shadow">
+                <h2 className="text-xl font-semibold">모두 보기</h2>
+                <p className="text-gray-500 text-sm">자세히 보기 →</p>
+            </Link>
             {posts.map(p => (
                 <Link to={`/post/${p.id}`} key={p.id} className="block bg-white border rounded-xl p-4 hover:shadow">
                     <h2 className="text-xl font-semibold">{p.title}</h2>
