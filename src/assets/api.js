@@ -21,6 +21,7 @@ api.interceptors.response.use(
     e => {
         if (e?.response?.status === 401) {
             localStorage.removeItem('token')
+            if (location.pathname !== '/login') alert('세션이 만료되었습니다. 다시 로그인해주세요.')
             if (location.pathname !== '/login') location.href = '/login'
         }
         return Promise.reject(e)
