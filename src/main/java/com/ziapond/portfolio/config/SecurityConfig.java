@@ -57,18 +57,9 @@ public class SecurityConfig {
           .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
           .httpBasic(b -> b.disable())
           .authorizeHttpRequests(auth -> auth
-             
               .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-        
               .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-        
               .requestMatchers(HttpMethod.GET, "/api/health", "/api/dbping", "/api/posts/**").permitAll()
-    
-              .requestMatchers(HttpMethod.POST,   "/api/posts/**").hasRole("ADMIN")
-              .requestMatchers(HttpMethod.PUT,    "/api/posts/**").hasRole("ADMIN")
-              .requestMatchers(HttpMethod.PATCH,  "/api/posts/**").hasRole("ADMIN")
-              .requestMatchers(HttpMethod.DELETE, "/api/posts/**").hasRole("ADMIN")
-    
               .anyRequest().authenticated()
           );
 
