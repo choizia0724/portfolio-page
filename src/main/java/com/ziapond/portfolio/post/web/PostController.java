@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.EmptyResultDataAccessException;
+
 
 import java.util.List;
 import java.util.Map;
@@ -65,14 +67,17 @@ public class PostController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (repo.existsById(id)) {
+        try {
             repo.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build(); // 204
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();  // 404
         }
-        return ResponseEntity.notFound().build();
     }
+
 
 
     @GetMapping(value = "/github/readme", produces = MediaType.TEXT_PLAIN_VALUE)
