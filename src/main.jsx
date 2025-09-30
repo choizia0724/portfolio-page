@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 import 'katex/dist/katex.min.css'
-import {AuthProvider} from "./assets/AuthContext.jsx";
+import {AuthProvider} from "./contexts/AuthContext.jsx";
 import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById('root')).render(

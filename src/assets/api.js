@@ -1,18 +1,14 @@
+// src/assets/api.js
 import axios from 'axios'
-const baseURL = '/api'
-export const api = axios.create({
-    baseURL,
-    headers: { 'Content-Type': 'application/json' }
-})
-
-const shouldSkipAuth = (url='') => url.includes('/auth/login')
+export const api = axios.create({ baseURL: '/api', headers: { 'Content-Type':'application/json' } })
 
 api.interceptors.request.use(cfg => {
-    if (!shouldSkipAuth(cfg.url)) {
+    if (!cfg.url?.includes('/auth/login')) {
         const t = localStorage.getItem('token')
+        console.log(t)
         if (t) cfg.headers.Authorization = `Bearer ${t}`
+        console.log(cfg)
     }
-    console.log(cfg)
     return cfg
 })
 

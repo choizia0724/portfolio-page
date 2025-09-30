@@ -4,18 +4,19 @@ import PostDetail from './pages/PostDetail'
 import Login from './pages/Login'
 import Write from './pages/Write.jsx'
 import AdminEdit from './pages/AdminEdit'
+import RequireAuth from "./routes/RequireAuth";
+import {useAuth} from "./contexts/AuthContext.jsx";
 
-const isAuthed = () => !!localStorage.getItem('token')
-const Protected = ({ children }) => (isAuthed() ? children : <Navigate to="/login" replace />)
 
 export default function App() {
+    const {isAuth,logout} = useAuth()
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="border-b bg-white">
                 <nav className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-4">
                     <Link to="/" className="font-semibold">Portfolio</Link>
                     <div className="ml-auto flex items-center gap-3 text-sm">
-                        {isAuthed() ? (
+                        {isAuth ? (
                             <>
                                 <Link to="/write" className="text-blue-600">Admin</Link>
                                 <button className="px-2 py-1 border rounded"
@@ -33,8 +34,8 @@ export default function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/post/:id" element={<PostDetail />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/write" element={<Protected><Write /></Protected>} />
-                    <Route path="/write/edit/:id" element={<Protected><AdminEdit /></Protected>} />
+                    <Route path="/write" element={<RequireAuth><Write /></RequireAuth>} />
+                    <Route path="/write/edit/:id" element={<RequireAuth><AdminEdit /></RequireAuth>} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </main>

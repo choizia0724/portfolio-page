@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../assets/api'
-import { useAuth } from './../assets/AuthContext'
+import { useAuth } from '../contexts/AuthContext.jsx'
 
 export default function Login() {
     const [username, setU] = useState('')
@@ -15,8 +15,11 @@ export default function Login() {
         setErr('')
         try {
             console.log('test')
-            const { data } = await api.post('/auth/login', { username, password })
-            await login(data.token)
+            await api.post('/auth/login', { username, password }).then(x=>{
+                console.log(x)
+                login(x.data.token)
+            })
+
             nav('/admin', { replace: true })
         } catch (e) {
             setErr('로그인 실패')

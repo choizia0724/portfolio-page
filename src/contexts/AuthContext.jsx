@@ -1,6 +1,6 @@
 // src/contexts/AuthContext.jsx
 import { createContext, useContext, useEffect, useState, useCallback } from 'react'
-import { api } from './api'
+import { api } from '../assets/api.js'
 
 const AuthContext = createContext(null)
 
@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
 
     const verify = useCallback(async () => {
         try {
-            const res = await api.get('/auth/verify')
+            const res = await api.get('/auth/verify',)
             setUser(res.data)
             setAuth(true)
             return true
