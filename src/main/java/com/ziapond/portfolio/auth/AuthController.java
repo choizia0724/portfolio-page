@@ -42,10 +42,14 @@ public class AuthController {
         if (auth == null || !auth.isAuthenticated()) {
             return ResponseEntity.status(401).build();
         }
-        UserDetails u = (UserDetails) auth.getPrincipal();
+        String username = auth.getName();
+        var roles = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
         return ResponseEntity.ok(Map.of(
-                "username", u.getUsername(),
-                "roles", u.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
+                "username", username,
+                "roles", roles
         ));
     }
 }
