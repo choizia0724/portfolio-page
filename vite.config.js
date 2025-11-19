@@ -11,7 +11,6 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_API_BASE,
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/^\/api/, ''), // '/api/foo' -> '/foo'
           configure: (proxy, options) => {
             proxy.on('proxyReq', (proxyReq, req) => {
               console.log('[proxyReq]', req.method, req.url, '=>', options.target)
